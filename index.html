@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DateShubh">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>A very important question 🦥</title>
+<meta name="description" content="Do you want to go on a date with Shubh? Only one answer is possible.">
+<meta property="og:title" content="Do you want to go on a date with Shubh? 🦥">
+<meta property="og:description" content="Only one answer is possible.">
+<meta name="theme-color" content="#ffe3ef">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦥</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{font-family:"Fredoka",ui-rounded,"Nunito","Segoe UI",system-ui,sans-serif;color:#5b3a4a;color-scheme:light;background:linear-gradient(160deg,#ffe3ef,#e4f0ff 55%,#e8ffe9);overflow-x:hidden}
+body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+main{min-height:100%;display:flex;align-items:center;justify-content:center;padding:max(20px,env(safe-area-inset-top)) 16px max(40px,env(safe-area-inset-bottom));position:relative;z-index:2}
+.lucky{margin:26px 0 0;padding:0;list-style:none;text-align:left}
+.lucky li{background:#fff;border-radius:18px;padding:11px 16px;margin:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.08);animation:slide .5s ease-out backwards}
+.lucky li:nth-child(1){animation-delay:.3s}.lucky li:nth-child(2){animation-delay:.6s}.lucky li:nth-child(3){animation-delay:.9s}.lucky li:nth-child(4){animation-delay:1.2s}.lucky li:nth-child(5){animation-delay:1.5s}.lucky li:nth-child(6){animation-delay:1.8s}.lucky li:nth-child(7){animation-delay:2.1s}
+.lucky li.warn{background:#fff0f6;border:2px dashed #ff7eb6;font-weight:600;animation-delay:2.6s}
+@keyframes slide{from{opacity:0;transform:translateY(14px)}}
+.card{width:min(560px,100%);text-align:center;background:rgba(255,255,255,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:28px;padding:28px 20px;box-shadow:0 10px 40px rgba(220,100,150,.25)}
+h1,h2{margin:0 0 8px;line-height:1.2;letter-spacing:.3px}
+h1{font-size:clamp(1.5rem,5.5vw,2.2rem)}
+h2{font-size:clamp(1.6rem,6vw,2.2rem)}
+.big{display:block;font-size:3.4rem;margin-top:8px;animation:bob 2.4s ease-in-out infinite}
+.sub{margin:0 0 14px;opacity:.75}
+.row{display:flex;gap:16px;justify-content:center;align-items:center;min-height:68px;margin-top:14px;flex-wrap:wrap}
+button,.go{font:inherit;cursor:pointer;border:0;border-radius:999px;padding:14px 32px;font-size:1.2rem;font-weight:600;transition:transform .15s,box-shadow .15s,opacity .15s;text-decoration:none;display:inline-block}
+button:focus-visible,.go:focus-visible,input:focus-visible+span{outline:3px solid #ff5e9c;outline-offset:2px}
+#yes,.go{background:linear-gradient(135deg,#ff7eb6,#ff5e9c);color:#fff;box-shadow:0 6px 18px rgba(255,94,156,.45)}
+#yes{font-size:1.5rem;padding:16px 44px;animation:pulse 1.6s ease-in-out infinite}
+.go:hover:not(:disabled){transform:scale(1.06)}
+.go:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.ghost{background:#fff;color:#8a4a68;box-shadow:0 3px 10px rgba(0,0,0,.1)}
+#no{background:#fff;color:#8a6a78;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:50;touch-action:none;transition:left .14s ease-out,top .14s ease-out,transform .14s ease-out}
+.days{display:grid;grid-template-columns:repeat(auto-fit,minmax(78px,1fr));gap:8px;margin:14px 0}
+.days label{position:relative;cursor:pointer}
+.days input{position:absolute;opacity:0;pointer-events:none}
+.days span{display:block;padding:10px 4px;border-radius:16px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);font-size:.9rem;line-height:1.3;transition:.15s}
+.days b{display:block;font-size:1.1rem}
+.days input:checked+span{background:#ff7eb6;color:#fff;transform:scale(1.07)}
+input[type=time]{font:inherit;font-size:1.5rem;padding:10px 16px;border-radius:16px;border:2px solid #ffb3d1;background:#fff;color:inherit;margin:4px 0 18px}
+.places{display:grid;gap:10px;margin-top:14px}
+.place{background:#fff;color:inherit;border-radius:20px;padding:12px 18px;text-align:left;display:flex;gap:14px;align-items:center;font-size:1.15rem;box-shadow:0 3px 10px rgba(0,0,0,.09)}
+.place:hover{transform:translateY(-2px) scale(1.02);background:#fff0f6}
+.place em{font-size:2rem;font-style:normal}
+.place small{display:block;font-weight:400;opacity:.7;font-size:.85rem}
+.sum{font-size:1.35rem;font-weight:600;margin:6px 0}
+#sloth{position:fixed;left:0;right:0;bottom:-3vh;margin:auto;width:min(88vw,430px);opacity:.6;z-index:1;pointer-events:none;transform-origin:50% 28%;animation:sway 5s ease-in-out infinite}
+.f{position:fixed;bottom:-50px;z-index:0;pointer-events:none;opacity:.7;animation:rise linear infinite}
+.b{position:fixed;left:50%;top:40%;font-size:1.7rem;z-index:60;pointer-events:none;animation:pop 1.4s ease-out forwards}
+@keyframes bob{50%{transform:translateY(-8px) rotate(4deg)}}
+@keyframes pulse{50%{transform:scale(1.07)}}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes rise{to{transform:translateY(-115vh) rotate(40deg)}}
+@keyframes pop{to{transform:translate(var(--x),var(--y)) scale(1.3);opacity:0}}
+@media (prefers-reduced-motion:reduce){.big,#yes,#sloth,.f{animation:none}}
+</style>
+</head>
+<body>
+
+<svg id="sloth" viewBox="0 0 400 420" aria-hidden="true">
+  <path d="M10 122 Q200 100 390 127" stroke="#8d6a4a" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <ellipse cx="55" cy="96" rx="27" ry="12" fill="#9fd8a0" transform="rotate(-30 55 96)"/>
+  <ellipse cx="348" cy="102" rx="27" ry="12" fill="#9fd8a0" transform="rotate(30 348 102)"/>
+  <ellipse cx="200" cy="335" rx="108" ry="85" fill="#c9a07a"/>
+  <ellipse cx="200" cy="350" rx="62" ry="52" fill="#ebd6b6"/>
+  <path d="M122 305 Q68 225 92 126" stroke="#c9a07a" stroke-width="38" fill="none" stroke-linecap="round"/>
+  <path d="M278 305 Q332 225 308 126" stroke="#c9a07a" stroke-width="38" fill="none" stroke-linecap="round"/>
+  <g stroke="#f6ead6" stroke-width="5" stroke-linecap="round"><path d="M78 108l-6-14M92 104v-16M106 108l6-14M294 108l-6-14M308 104v-16M322 108l6-14"/></g>
+  <circle cx="124" cy="168" r="22" fill="#c9a07a"/><circle cx="276" cy="168" r="22" fill="#c9a07a"/>
+  <ellipse cx="200" cy="205" rx="90" ry="80" fill="#c9a07a"/>
+  <ellipse cx="200" cy="215" rx="72" ry="62" fill="#f8ecd8"/>
+  <ellipse cx="160" cy="205" rx="22" ry="30" fill="#7a5638" transform="rotate(20 160 205)"/>
+  <ellipse cx="240" cy="205" rx="22" ry="30" fill="#7a5638" transform="rotate(-20 240 205)"/>
+  <circle cx="162" cy="204" r="12" fill="#2b1b12"/><circle cx="238" cy="204" r="12" fill="#2b1b12"/>
+  <circle cx="166" cy="199" r="4.5" fill="#fff"/><circle cx="242" cy="199" r="4.5" fill="#fff"/>
+  <circle cx="158" cy="210" r="2.2" fill="#fff"/><circle cx="234" cy="210" r="2.2" fill="#fff"/>
+  <ellipse cx="200" cy="229" rx="9" ry="6.5" fill="#3b2418"/>
+  <path d="M182 243 Q191 255 200 245 Q209 255 218 243" stroke="#3b2418" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="142" cy="240" rx="12" ry="7.5" fill="#ff9db8" opacity=".75"/><ellipse cx="258" cy="240" rx="12" ry="7.5" fill="#ff9db8" opacity=".75"/>
+  <path d="M200 160c-6-9-20-3-14 6 3 4 9 8 14 11 5-3 11-7 14-11 6-9-8-15-14-6z" fill="#ff7eb6" transform="translate(0 -12) scale(.9) translate(22 -4)"/>
+</svg>
+
+<main><div class="card">
+
+  <section class="screen" id="s1">
+    <h1>DO YOU WANT TO GO ON A DATE WITH SHUBH?<span class="big">🦥</span></h1>
+    <div class="row"><button id="yes">Yes 💖</button><button id="no">No</button></div>
+  </section>
+
+  <section class="screen" id="s2" hidden>
+    <h2>WHEN? 📅</h2>
+    <p class="sub">Pick a day, then any time you like.</p>
+    <div class="days" id="days"></div>
+    <input type="time" id="time" aria-label="Time">
+    <div><button class="go" id="next" disabled>Next 🦥</button></div>
+  </section>
+
+  <section class="screen" id="s3" hidden>
+    <h2>WHERE? 📍</h2>
+    <p class="sub">Choose wisely. There are only five options.</p>
+    <div class="places" id="places"></div>
+  </section>
+
+  <section class="screen" id="s4" hidden>
+    <h2>It’s a date! 🎉</h2>
+    <p class="sum" id="when"></p>
+    <p class="sum" id="where"></p>
+    <p class="sub" id="joke"></p>
+    <div class="row">
+      <a class="go" id="wa" target="_blank" rel="noopener">Send the plan to Shubh 💚</a>
+      <button class="go ghost" id="copy">Copy details 📋</button>
+    </div>
+    <h2 style="margin-top:30px">Why you are lucky to date Shubh 🍀</h2>
+    <ul class="lucky">
+      <li>🐕 Shubh takes care of 10 dogs</li>
+      <li>💙 Shubh runs a charity that has helped 900+ people get diagnosed with ADHD and Autism</li>
+      <li>💊 Shubh helps needy people get medicine they can’t find anywhere else</li>
+      <li>😎 Shubh is the most handsome person at his university</li>
+      <li>🧠 Shubh is the smartest person at his university</li>
+      <li>🍳 Shubh cooks amazing food</li>
+      <li>⚡ Shubh is the favourite child of Zeus</li>
+      <li class="warn">🔱 If you do not treat Shubh right, Aphrodite and Hera will punish you, and you will die without any friends, family, husband, or children.</li>
+    </ul>
+  </section>
+
+</div></main>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s);
+const screens=[...document.querySelectorAll('.screen')];
+const show=id=>screens.forEach(s=>s.hidden=s.id!==id);
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const mk=(cls,txt,css)=>{const e=document.createElement('div');e.className=cls;e.textContent=txt;if(css)e.style.cssText=css;document.body.append(e);return e};
+
+/* floating hearts and leaves */
+for(let i=0;i<16;i++)mk('f',['💖','💗','🌿','🍃','✨','🦥'][i%6],
+  `left:${rnd(0,100)}vw;font-size:${rnd(16,36)}px;animation-duration:${rnd(9,19)}s;animation-delay:-${rnd(0,15)}s`);
+
+function burst(){
+  for(let i=0;i<36;i++){
+    const a=rnd(0,6.28),r=rnd(120,340),e=mk('b',['💖','🦥','💕','✨','🌸'][i%5]);
+    e.style.setProperty('--x',Math.cos(a)*r+'px');
+    e.style.setProperty('--y',Math.sin(a)*r+'px');
+    setTimeout(()=>e.remove(),1500);
+  }
+}
+
+/* the No button runs away */
+const yes=$('#yes'),no=$('#no');let mx=-999,my=-999;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function dodge(){
+  no.style.position='fixed';
+  const w=no.offsetWidth,h=no.offsetHeight,y=yes.getBoundingClientRect(),r=no.getBoundingClientRect();
+  const cx=r.left+r.width/2,cy=r.top+r.height/2;
+  let dx=cx-mx,dy=cy-my;const d=Math.hypot(dx,dy)||1;dx/=d;dy/=d;
+  const step=rnd(190,280);
+  const bad=(x,t)=>Math.hypot(x+w/2-mx,t+h/2-my)<200||(x<y.right+24&&x+w>y.left-24&&t<y.bottom+24&&t+h>y.top-24);
+  /* run directly away from the pointer; if cornered, jump somewhere far */
+  let x=clamp(cx+dx*step-w/2,12,innerWidth-w-12),t=clamp(cy+dy*step-h/2,12,innerHeight-h-12),n=0;
+  while(bad(x,t)&&n++<60){x=rnd(12,innerWidth-w-12);t=rnd(12,innerHeight-h-12)}
+  no.style.left=x+'px';no.style.top=t+'px';
+  no.style.transform=`rotate(${rnd(-14,14)}deg)`;
+}
+const near=e=>{
+  mx=e.clientX;my=e.clientY;
+  if(!no.isConnected)return;
+  const r=no.getBoundingClientRect();
+  if(Math.hypot(Math.max(r.left-mx,0,mx-r.right),Math.max(r.top-my,0,my-r.bottom))<120)dodge();
+};
+addEventListener('pointermove',near);
+addEventListener('pointerdown',near);
+no.addEventListener('click',e=>{e.preventDefault();dodge()});
+no.addEventListener('focus',()=>{dodge();no.blur()});
+addEventListener('resize',()=>{if(no.isConnected&&no.style.position)dodge()});
+yes.onclick=()=>{burst();no.remove();renderDays();show('s2')};
+
+/* step 2: day and time */
+const plan={};
+const next=$('#next'),time=$('#time');
+const ready=()=>{next.disabled=!(document.querySelector('[name=day]:checked')&&time.value)};
+['input','change'].forEach(t=>document.addEventListener(t,ready));
+let built='';
+function renderDays(){
+  const keep=(document.querySelector('[name=day]:checked')||{}).value;
+  $('#days').innerHTML='';
+  for(let i=1;i<=7;i++){
+    const d=new Date();d.setDate(d.getDate()+i);
+    const wd=d.toLocaleDateString([],{weekday:'short'}),dt=d.toLocaleDateString([],{day:'numeric',month:'short'}),
+          full=d.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'});
+    $('#days').insertAdjacentHTML('beforeend',`<label><input type="radio" name="day" value="${full}"${full===keep?' checked':''}><span><b>${wd}</b>${dt}</span></label>`);
+  }
+  built=new Date().toDateString();ready();
+}
+renderDays();
+/* keep the 7 days current: refresh at midnight and when the tab wakes up */
+setInterval(()=>{if(built!==new Date().toDateString())renderDays()},30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&built!==new Date().toDateString())renderDays()});
+next.onclick=()=>{
+  plan.day=document.querySelector('[name=day]:checked').value;
+  plan.time=new Date('2000-01-01T'+time.value).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+  show('s3');
+};
+
+/* step 3: place (five options only) */
+const PL=[
+  ['🦆','Duck Lake','Bring bread. Expect quacking.'],
+  ['👻','Haunted House','Holding hands is mandatory.'],
+  ['🏠','My House','Snacks, blankets, and sloth-speed relaxing.'],
+  ['🏡','Your House','I’ll be on my best behavior.'],
+  ['👨‍👩‍👧‍👦','Family Dinner','To assess marriage compatibility 💍']
+];
+PL.forEach(([ic,nm,jk])=>{
+  const b=document.createElement('button');
+  b.className='place';
+  b.innerHTML=`<em>${ic}</em><span>${nm}<small>${jk}</small></span>`;
+  b.onclick=()=>finish(ic,nm,jk);
+  $('#places').append(b);
+});
+
+/* step 4: confirmation */
+function finish(ic,nm,jk){
+  $('#when').textContent=`📅 ${plan.day}, ${plan.time}`;
+  $('#where').textContent=`${ic} ${nm}`;
+  $('#joke').textContent=jk;
+  const msg=`I said YES to a date with Shubh! 🦥💖\n📅 ${plan.day}\n⏰ ${plan.time}\n📍 ${nm}`;
+  $('#wa').href='https://wa.me/?text='+encodeURIComponent(msg);
+  $('#copy').onclick=async()=>{
+    try{await navigator.clipboard.writeText(msg);$('#copy').textContent='Copied! Paste it to Shubh 💌'}
+    catch(e){$('#copy').textContent='Copy not available here 😅'}
+  };
+  burst();show('s4');
+}
+
+/* lets phones install this as an app and open it offline */
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+})();
+</script>
+</body>
+</html>
