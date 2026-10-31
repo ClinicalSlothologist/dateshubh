@@ -162,6 +162,13 @@ function burst(){
 const yes=$('#yes'),no=$('#no');let mx=-999,my=-999;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function dodge(){
+  /* the card's blur effect would trap a "fixed" button inside the card, so
+     the first time it flees we lift it out onto the page itself */
+  if(no.parentNode!==document.body){
+    const p=no.getBoundingClientRect();
+    document.body.append(no);
+    no.style.position='fixed';no.style.left=p.left+'px';no.style.top=p.top+'px';
+  }
   no.style.position='fixed';
   const w=no.offsetWidth,h=no.offsetHeight,y=yes.getBoundingClientRect(),r=no.getBoundingClientRect();
   const cx=r.left+r.width/2,cy=r.top+r.height/2;
@@ -236,7 +243,7 @@ function finish(ic,nm,jk){
   $('#where').textContent=`${ic} ${nm}`;
   $('#joke').textContent=jk;
   const msg=`I said YES to a date with Shubh! 🦥💖\n📅 ${plan.day}\n⏰ ${plan.time}\n📍 ${nm}`;
-  $('#wa').href='https://wa.me/?text='+encodeURIComponent(msg);
+  $('#wa').href='https://wa.me/919889654694?text='+encodeURIComponent(msg);
   $('#copy').onclick=async()=>{
     try{await navigator.clipboard.writeText(msg);$('#copy').textContent='Copied! Paste it to Shubh 💌'}
     catch(e){$('#copy').textContent='Copy not available here 😅'}
