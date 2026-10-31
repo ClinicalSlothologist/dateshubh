@@ -119,7 +119,8 @@ input[type=time]{font:inherit;font-size:1.5rem;padding:10px 16px;border-radius:1
     <p class="sum" id="where"></p>
     <p class="sub" id="joke"></p>
     <div class="row">
-      <button class="go" id="wa">Send the plan to Shubh 💚</button>
+      <a class="go" id="wa" target="_blank" rel="noopener">Send the plan to Shubh 💚</a>
+      <button class="go ghost" id="copy">Copy details 📋</button>
     </div>
     <h2 style="margin-top:30px">Why you are lucky to date Shubh 🍀</h2>
     <ul class="lucky">
@@ -144,19 +145,7 @@ const show=id=>screens.forEach(s=>s.hidden=s.id!==id);
 const rnd=(a,b)=>a+Math.random()*(b-a);
 const mk=(cls,txt,css)=>{const e=document.createElement('div');e.className=cls;e.textContent=txt;if(css)e.style.cssText=css;document.body.append(e);return e};
 
-document.addEventListener('click', () => {
-    if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(()=>{});
-    }
-}, {once: true});
-
-window.onbeforeunload = function(e) {
-    const warning = "NO EXIT FROM SHUBH UNTIL YOU COMPLETE IT!!";
-    e.preventDefault();
-    e.returnValue = warning; 
-    return warning;
-};
-
+/* floating hearts and leaves */
 for(let i=0;i<16;i++)mk('f',['💖','💗','🌿','🍃','✨','🦥'][i%6],
   `left:${rnd(0,100)}vw;font-size:${rnd(16,36)}px;animation-duration:${rnd(9,19)}s;animation-delay:-${rnd(0,15)}s`);
 
@@ -169,15 +158,24 @@ function burst(){
   }
 }
 
+/* the No button runs away */
 const yes=$('#yes'),no=$('#no');let mx=-999,my=-999;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function dodge(){
+  /* the card's blur effect would trap a "fixed" button inside the card, so
+     the first time it flees we lift it out onto the page itself */
+  if(no.parentNode!==document.body){
+    const p=no.getBoundingClientRect();
+    document.body.append(no);
+    no.style.position='fixed';no.style.left=p.left+'px';no.style.top=p.top+'px';
+  }
   no.style.position='fixed';
   const w=no.offsetWidth,h=no.offsetHeight,y=yes.getBoundingClientRect(),r=no.getBoundingClientRect();
   const cx=r.left+r.width/2,cy=r.top+r.height/2;
   let dx=cx-mx,dy=cy-my;const d=Math.hypot(dx,dy)||1;dx/=d;dy/=d;
   const step=rnd(190,280);
   const bad=(x,t)=>Math.hypot(x+w/2-mx,t+h/2-my)<200||(x<y.right+24&&x+w>y.left-24&&t<y.bottom+24&&t+h>y.top-24);
+  /* run directly away from the pointer; if cornered, jump somewhere far */
   let x=clamp(cx+dx*step-w/2,12,innerWidth-w-12),t=clamp(cy+dy*step-h/2,12,innerHeight-h-12),n=0;
   while(bad(x,t)&&n++<60){x=rnd(12,innerWidth-w-12);t=rnd(12,innerHeight-h-12)}
   no.style.left=x+'px';no.style.top=t+'px';
@@ -196,6 +194,7 @@ no.addEventListener('focus',()=>{dodge();no.blur()});
 addEventListener('resize',()=>{if(no.isConnected&&no.style.position)dodge()});
 yes.onclick=()=>{burst();no.remove();renderDays();show('s2')};
 
+/* step 2: day and time */
 const plan={};
 const next=$('#next'),time=$('#time');
 const ready=()=>{next.disabled=!(document.querySelector('[name=day]:checked')&&time.value)};
@@ -213,6 +212,7 @@ function renderDays(){
   built=new Date().toDateString();ready();
 }
 renderDays();
+/* keep the 7 days current: refresh at midnight and when the tab wakes up */
 setInterval(()=>{if(built!==new Date().toDateString())renderDays()},30000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&built!==new Date().toDateString())renderDays()});
 next.onclick=()=>{
@@ -221,6 +221,7 @@ next.onclick=()=>{
   show('s3');
 };
 
+/* step 3: place (five options only) */
 const PL=[
   ['🦆','Duck Lake','Bring bread. Expect quacking.'],
   ['👻','Haunted House','Holding hands is mandatory.'],
@@ -236,36 +237,21 @@ PL.forEach(([ic,nm,jk])=>{
   $('#places').append(b);
 });
 
+/* step 4: confirmation */
 function finish(ic,nm,jk){
   $('#when').textContent=`📅 ${plan.day}, ${plan.time}`;
   $('#where').textContent=`${ic} ${nm}`;
   $('#joke').textContent=jk;
   const msg=`I said YES to a date with Shubh! 🦥💖\n📅 ${plan.day}\n⏰ ${plan.time}\n📍 ${nm}`;
-  
-  $('#wa').onclick = async () => {
-    $('#wa').disabled = true;
-    $('#wa').textContent = 'Sending...';
-    try {
-      await fetch('https://shubh-date-backend.loca.lt/submit', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Bypass-Tunnel-Reminder': 'true'
-        },
-        body: JSON.stringify({ message: msg, day: plan.day, time: plan.time, place: nm })
-      });
-      
-      $('#wa').textContent = 'SHUBH HAS RECEIVED YOUR MESSAGE KUPO!';
-      window.onbeforeunload = null; 
-      if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
-    } catch (e) {
-      $('#wa').textContent = 'Error connecting to local server!';
-      $('#wa').disabled = false;
-    }
+  $('#wa').href='https://wa.me/919889654694?text='+encodeURIComponent(msg);
+  $('#copy').onclick=async()=>{
+    try{await navigator.clipboard.writeText(msg);$('#copy').textContent='Copied! Paste it to Shubh 💌'}
+    catch(e){$('#copy').textContent='Copy not available here 😅'}
   };
   burst();show('s4');
 }
 
+/* lets phones install this as an app and open it offline */
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();
 </script>
