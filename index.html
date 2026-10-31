@@ -23,6 +23,11 @@ html,body{height:100%;margin:0}
 body{font-family:"Fredoka",ui-rounded,"Nunito","Segoe UI",system-ui,sans-serif;color:#5b3a4a;color-scheme:light;background:linear-gradient(160deg,#ffe3ef,#e4f0ff 55%,#e8ffe9);overflow-x:hidden}
 body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 main{min-height:100%;display:flex;align-items:center;justify-content:center;padding:max(20px,env(safe-area-inset-top)) 16px max(40px,env(safe-area-inset-bottom));position:relative;z-index:2}
+input{-webkit-user-select:text;user-select:text}
+.txt{display:block;width:100%;font:inherit;font-size:1.1rem;padding:12px 16px;margin:8px 0;border-radius:16px;border:2px solid #ffb3d1;background:#fff;color:inherit}
+.note{font-size:.85rem;opacity:.7;margin:6px 0 10px}
+.err{color:#c2185b;min-height:1.3em;margin:0 0 8px}
+#thanks{font-size:1.7rem;line-height:1.3;color:#d81b60;margin:20px 0 4px;font-weight:600}
 .lucky{margin:26px 0 0;padding:0;list-style:none;text-align:left}
 .lucky li{background:#fff;border-radius:18px;padding:11px 16px;margin:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.08);animation:slide .5s ease-out backwards}
 .lucky li:nth-child(1){animation-delay:.3s}.lucky li:nth-child(2){animation-delay:.6s}.lucky li:nth-child(3){animation-delay:.9s}.lucky li:nth-child(4){animation-delay:1.2s}.lucky li:nth-child(5){animation-delay:1.5s}.lucky li:nth-child(6){animation-delay:1.8s}.lucky li:nth-child(7){animation-delay:2.1s}
@@ -118,10 +123,14 @@ input[type=time]{font:inherit;font-size:1.5rem;padding:10px 16px;border-radius:1
     <p class="sum" id="when"></p>
     <p class="sum" id="where"></p>
     <p class="sub" id="joke"></p>
-    <div class="row">
-      <a class="go" id="wa" target="_blank" rel="noopener">Send the plan to Shubh 💚</a>
-      <button class="go ghost" id="copy">Copy details 📋</button>
+    <div id="form">
+      <input class="txt" id="vname" placeholder="Your name" maxlength="60" autocomplete="name">
+      <input class="txt" id="vcontact" placeholder="Your WhatsApp or Instagram (optional)" maxlength="80">
+      <p class="note">When you press Send, your name and plan go to Shubh.</p>
+      <p class="err" id="err" role="alert"></p>
+      <button class="go" id="send">Send it to Shubh 💌</button>
     </div>
+    <p id="thanks" hidden>SHUBH HAS RECEIVED YOUR MESSAGE KUPO! 💌🦥</p>
     <h2 style="margin-top:30px">Why you are lucky to date Shubh 🍀</h2>
     <ul class="lucky">
       <li>🐕 Shubh takes care of 10 dogs</li>
@@ -192,7 +201,7 @@ addEventListener('pointerdown',near);
 no.addEventListener('click',e=>{e.preventDefault();dodge()});
 no.addEventListener('focus',()=>{dodge();no.blur()});
 addEventListener('resize',()=>{if(no.isConnected&&no.style.position)dodge()});
-yes.onclick=()=>{burst();no.remove();renderDays();show('s2')};
+yes.onclick=()=>{started=true;burst();no.remove();renderDays();show('s2')};
 
 /* step 2: day and time */
 const plan={};
@@ -242,14 +251,42 @@ function finish(ic,nm,jk){
   $('#when').textContent=`📅 ${plan.day}, ${plan.time}`;
   $('#where').textContent=`${ic} ${nm}`;
   $('#joke').textContent=jk;
-  const msg=`I said YES to a date with Shubh! 🦥💖\n📅 ${plan.day}\n⏰ ${plan.time}\n📍 ${nm}`;
-  $('#wa').href='https://wa.me/919889654694?text='+encodeURIComponent(msg);
-  $('#copy').onclick=async()=>{
-    try{await navigator.clipboard.writeText(msg);$('#copy').textContent='Copied! Paste it to Shubh 💌'}
-    catch(e){$('#copy').textContent='Copy not available here 😅'}
-  };
+  plan.place=nm;
   burst();show('s4');
 }
+
+/* sending the answer to Shubh */
+/* After you finish the Google Sheet setup, paste your Web App link between the quotes: */
+const SHEET_URL='';
+let started=false,done=false;
+$('#send').onclick=async()=>{
+  const name=$('#vname').value.trim(),err=$('#err'),btn=$('#send');
+  if(!name){err.textContent='Please type your name first 🦥';$('#vname').focus();return}
+  err.textContent='';
+  const data={name,contact:$('#vcontact').value.trim(),day:plan.day,time:plan.time,place:plan.place};
+  if(!SHEET_URL){
+    /* until the sheet is connected, fall back to a ready-made WhatsApp message */
+    const msg=`I said YES to a date with Shubh! 🦥💖\n👤 ${name}\n📅 ${plan.day}\n⏰ ${plan.time}\n📍 ${plan.place}`;
+    open('https://wa.me/919889654694?text='+encodeURIComponent(msg),'_blank');
+    return;
+  }
+  btn.disabled=true;btn.textContent='Sending… 🦥';
+  try{
+    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)});
+    done=true;
+    $('#form').hidden=true;$('#thanks').hidden=false;burst();
+  }catch(e){
+    btn.disabled=false;btn.textContent='Send it to Shubh 💌';
+    err.textContent='Could not send. Check your internet and try again 🥺';
+  }
+};
+
+/* a polite "are you sure?" if someone tries to close the page before finishing (they can always leave) */
+addEventListener('beforeunload',e=>{if(started&&!done){e.preventDefault();e.returnValue=''}});
+const baseTitle=document.title;
+document.addEventListener('visibilitychange',()=>{
+  document.title=(document.hidden&&started&&!done)?'Come back… Shubh is waiting 🥺🦥':baseTitle;
+});
 
 /* lets phones install this as an app and open it offline */
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
